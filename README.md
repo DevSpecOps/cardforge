@@ -26,6 +26,8 @@ graph TD
 
 ## Stack
 
+![Интерфейс CardForge](docs/screenshot.png)
+
 | Layer | Technology |
 |---|---|
 | API | FastAPI 0.115, Uvicorn, Pydantic v2 |
