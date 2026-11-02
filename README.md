@@ -1,6 +1,6 @@
 # CardForge
 
-**LLM → structured JSON → ручная правка.** Минимальный fullstack AI-сервис: FastAPI + SQLite + Ollama + React/TS + Docker.
+**Multimodal LLM → Structured JSON → Manual Review.** A lightweight fullstack AI service: FastAPI + SQLite + Ollama + React/TS + Docker.
 
 [![Python](https://img.shields.io/badge/python-3.10-blue)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688)](https://fastapi.tiangolo.com/)
@@ -8,50 +8,49 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6)](https://www.typescriptlang.org/)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ed)](https://docs.docker.com/compose/)
 
-## What it demonstrates
-
-- **Backend** — FastAPI, Pydantic v2, SQLite, асинхронный вызов LLM через httpx.
-- **LLM** — structured output: format=json в Ollama + валидация схемой + до двух повторов при ошибке.
-- **Frontend** — React 18 + TypeScript: генерация, просмотр, ручное редактирование полей.
-- **Ops** — Docker Compose, healthcheck, CPU-only, без внешних БД и очередей.
+## Features
+- **Backend** — FastAPI, Pydantic v2, SQLite, asynchronous LLM calls via httpx.
+- **Multimodal LLM** — structured output using local \llava\ model. Validates JSON schema and retries on failure.
+- **Image Preprocessing** — accepts images up to 20MB, converts to optimized JPEG (via Pillow) before sending to LLM.
+- **Frontend** — React 18 + TypeScript. Handles image upload, dynamic loading states, inline editing, and interactive history (load/delete).
+- **Ops** — Docker Compose, healthcheck, CPU-only inference.
 
 ## Architecture
 
-```mermaid
+\\\mermaid
 graph TD
     A[frontend: React + TS, Vite, nginx] -->|/api| B[api: FastAPI]
-    B -->|httpx| C[Ollama LLM: host.docker.internal]
+    B -->|httpx| C[Ollama LLM: llava, host.docker.internal]
     B -->|sqlite3| D[(SQLite: volume)]
-```
+\\\
 
 ## Stack
-
-![Интерфейс CardForge](docs/screenshot.png)
 
 | Layer | Technology |
 |---|---|
 | API | FastAPI 0.115, Uvicorn, Pydantic v2 |
-| LLM | Ollama (llama3.2), structured JSON |
+| LLM | Ollama (llava), structured JSON |
+| Image | Pillow, JPEG optimization |
 | DB | SQLite |
 | Frontend | React 18, TypeScript 5, Vite 5, nginx |
 | Runtime | Docker Compose, CPU-only |
 
 ## Quick start
 
-Требования: Docker Desktop, Ollama на хосте, ~2 ГБ RAM для модели.
+Requirements: Docker Desktop, Ollama running locally, ~5 GB RAM for the model.
 
-```bash
+\\\ash
 git clone https://github.com/DevSpecOps/cardforge.git
 cd cardforge
 docker compose up -d --build
-```
+\\\
 
-Перед первым запуском на хосте запусти Ollama и скачай модель:
+Before the first run, pull the multimodal model in a separate terminal:
 
-```bash
+\\\ash
 ollama serve
-ollama pull llama3.2
-```
+ollama pull llava
+\\\
 
 UI: http://localhost:8080
 API: http://localhost:8000
@@ -61,17 +60,12 @@ OpenAPI: http://localhost:8000/docs
 
 | Method | Path | Purpose |
 |---|---|---|
-| POST | /api/cards/generate | Принять текст, вернуть карточку и ID |
-| GET | /api/cards | Список карточек |
-| GET | /api/cards/{id} | Детали карточки |
-| PATCH | /api/cards/{id} | Сохранить ручные правки |
+| POST | /api/cards/generate | Accept text/image, return card |
+| GET | /api/cards | List generated cards |
+| GET | /api/cards/{id} | Get card details |
+| PATCH | /api/cards/{id} | Save manual edits |
+| DELETE | /api/cards/{id} | Delete card |
 | GET | /health | Liveness |
-
-## Failure modes
-
-- **Ollama недоступна** — 502 с текстом ошибки, карточка не сохраняется.
-- **LLM вернул невалидный JSON** — до двух повторов, затем 502 со структурированной ошибкой.
-- **Пустой ввод** — 422 от Pydantic.
 
 ## License
 

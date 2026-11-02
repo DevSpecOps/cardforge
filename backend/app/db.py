@@ -4,7 +4,6 @@ import sqlite3
 
 DB_PATH = os.getenv("DB_PATH", "cards.db")
 
-
 def init_db() -> None:
     with sqlite3.connect(DB_PATH) as c:
         c.execute(
@@ -17,7 +16,6 @@ def init_db() -> None:
             ")"
         )
 
-
 def save_card(input_text: str, card: dict, edited: bool = False) -> int:
     with sqlite3.connect(DB_PATH) as c:
         cur = c.execute(
@@ -25,7 +23,6 @@ def save_card(input_text: str, card: dict, edited: bool = False) -> int:
             (input_text, json.dumps(card, ensure_ascii=False), int(edited)),
         )
         return cur.lastrowid
-
 
 def list_cards(limit: int = 50) -> list[dict]:
     with sqlite3.connect(DB_PATH) as c:
@@ -35,13 +32,11 @@ def list_cards(limit: int = 50) -> list[dict]:
         ).fetchall()
         return [dict(r) for r in rows]
 
-
 def get_card(card_id: int) -> dict | None:
     with sqlite3.connect(DB_PATH) as c:
         c.row_factory = sqlite3.Row
         row = c.execute("SELECT * FROM cards WHERE id=?", (card_id,)).fetchone()
         return dict(row) if row else None
-
 
 def update_card(card_id: int, card: dict) -> None:
     with sqlite3.connect(DB_PATH) as c:
@@ -49,3 +44,7 @@ def update_card(card_id: int, card: dict) -> None:
             "UPDATE cards SET card_json=?, edited=1 WHERE id=?",
             (json.dumps(card, ensure_ascii=False), card_id),
         )
+
+def delete_card(card_id: int) -> None:
+    with sqlite3.connect(DB_PATH) as c:
+        c.execute("DELETE FROM cards WHERE id=?", (card_id,))

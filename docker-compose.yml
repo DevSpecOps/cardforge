@@ -3,8 +3,9 @@ services:
     build: ./backend
     environment:
       OLLAMA_BASE_URL: http://host.docker.internal:11434
-      OLLAMA_MODEL: llama3.2
+      OLLAMA_MODEL: llava
       DB_PATH: /data/cards.db
+      IMAGE_DIR: /data/images
     volumes:
       - cards_data:/data
     ports:

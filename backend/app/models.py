@@ -8,9 +8,19 @@ class GenerateRequest(BaseModel):
 class ProductCard(BaseModel):
     title: str
     description: str
-    bullets: list[str]
-    tags: list[str]
-    seo_keywords: list[str]
+    bullets: list[str] = Field(default_factory=list)
+    tags: list[str] = Field(default_factory=list)
+    seo_keywords: list[str] = Field(default_factory=list)
+    
+    brand: str = "Unknown"
+    manufacturer: str = "Unknown"
+    category: str = "Unknown"
+    gender: str = "Unknown"
+    material: str = "Unknown"
+    care: str = "Unknown"
+    country_of_origin: str = "Unknown"
+    size: str = "Unknown"
+    color: str = "Unknown"
 
 
 class GenerateResponse(BaseModel):
