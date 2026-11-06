@@ -113,3 +113,24 @@ button:disabled { opacity: .5; cursor: default; transform: none; }
 }
 .image-wrapper.expanded { max-height: 300px; opacity: 1; }
 .image-wrapper img { max-height: 200px; border-radius: 8px; border: 1px solid #eee; display: block; }
+@media print {
+  body.printing-mode * {
+    visibility: hidden;
+  }
+  body.printing-mode .printing-active, 
+  body.printing-mode .printing-active * {
+    visibility: visible;
+  }
+  body.printing-mode .printing-active {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+  .no-print {
+    display: none !important;
+  }
+}

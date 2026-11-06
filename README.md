@@ -8,16 +8,19 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6)](https://www.typescriptlang.org/)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ed)](https://docs.docker.com/compose/)
 
-![CardForge UI](docs/screenshot.png)
+## UI Preview
+
+![CardForge UI 1](docs/screenshot_1.png)
+![CardForge UI 2](docs/screenshot_2.png)
 
 ## Features
 
 - **Backend** — FastAPI, Pydantic v2, SQLite, asynchronous LLM calls via httpx.
-- **Hybrid AI Architecture** — Uses a Vision model (`llava-phi3`) for image analysis and a fast Text model (`llama3.2:1b`) for text rewriting, running inside Docker.
-- **Neuro-Symbolic Guardrails** — Python strict rules validate the LLM output. It prevents hallucinations (e.g., blocking body descriptions, replacing unknown brands, and enforcing color/material consistency).
-- **Structured Output** — Enforces strict JSON schema via Ollama `format` parameter and Pydantic validation.
-- **Image Preprocessing** — Resizes and optimizes images (up to 20MB) via Pillow before sending them to the Vision model.
-- **Frontend** — React 18 + TypeScript. Drag & drop upload, dynamic UI states, manual edits, and a PDF export feature.
+- **Hybrid AI Architecture** — Uses a Vision model (`llava-phi3`) for image analysis and a fast Text model (`llama3.2:1b`) for text rewriting, running simultaneously inside Docker.
+- **Neuro-Symbolic Guardrails** — Deterministic Python rules validate the LLM output. It prevents hallucinations (e.g., blocking body descriptions, enforcing gender/tag consistency, and matching SEO keywords with actual colors).
+- **Structured Output** — Enforces strict JSON schema via the Ollama `format` parameter and Pydantic validation, ensuring no missing fields.
+- **Image Preprocessing** — Resizes and optimizes images (up to 20MB) via Pillow before sending them to the Vision model to save CPU cycles.
+- **Frontend** — React 18 + TypeScript. Drag & drop upload, dynamic UI states, autocomplete fields, interactive history, and native PDF export.
 - **Ops** — Fully containerized with Docker Compose. CPU-only inference, healthchecks included.
 
 ## Architecture
@@ -67,6 +70,7 @@ OpenAPI: http://localhost:8000/docs
 | PATCH | /api/cards/{id} | Save manual edits |
 | DELETE | /api/cards/{id} | Delete card |
 | POST | /api/cards/{id}/enhance | Rewrite text via AI |
+| GET | /api/system/status | Check Ollama and model status |
 | GET | /health | Liveness |
 
 ## License
