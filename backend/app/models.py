@@ -1,9 +1,7 @@
 from pydantic import BaseModel, Field
 
-
 class GenerateRequest(BaseModel):
     input_text: str = Field(..., min_length=3, max_length=4000)
-
 
 class ProductCard(BaseModel):
     title: str
@@ -20,8 +18,9 @@ class ProductCard(BaseModel):
     care: str = "Unknown"
     country_of_origin: str = "Unknown"
     size: str = "Unknown"
+    size_system: str = "International"
     color: str = "Unknown"
-
+    gallery_images: list[str] = Field(default_factory=list)
 
 class GenerateResponse(BaseModel):
     id: int
